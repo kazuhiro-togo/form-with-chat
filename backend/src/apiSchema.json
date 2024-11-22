@@ -1,0 +1,33 @@
+{
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "age": {
+            "type": "integer"
+        },
+        "gender": {
+            "type": "string",
+            "enum": [
+                "男性",
+                "女性",
+                "その他"
+            ]
+        },
+        "occupation": {
+            "type": "string"
+        },
+        "hobby": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "name",
+        "age",
+        "gender",
+        "occupation",
+        "hobby"
+    ],
+    "additionalProperties": false
+}
