@@ -2,21 +2,22 @@
 import React, { useState } from 'react';
 import { TextField, Button, List, ListItem, Typography } from '@mui/material';
 import axios from 'axios';
+import VoiceInput from './VoiceInput';
 
 const Chat = ({ setReloadSettings }) => {
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
 
-    const sendMessage = async () => {
-        if (input.trim() === '') return;
+    const sendMessage = async (message) => {
+        if (message.trim() === '') return;
 
-        const userMessage = { sender: 'user', text: input };
+        const userMessage = { sender: 'user', text: message };
         setMessages([...messages, userMessage]);
 
         try {
             // バックエンドにメッセージを送信
             const response = await axios.post(`${process.env.REACT_APP_API_BASE_URL}/chat`, {
-                message: input,
+                message: message,
             });
             const systemMessage = { sender: 'system', text: response.data.reply };
             setMessages((prevMessages) => [...prevMessages, systemMessage]);
@@ -35,6 +36,11 @@ const Chat = ({ setReloadSettings }) => {
         setInput('');
     };
 
+    const handleVoiceInput = (transcript) => {
+        setInput(transcript); // 音声入力結果をテキストフィールドに反映
+        sendMessage(transcript); // 音声入力結果をテキストフィールドに反映
+    };
+
     return (
         <div>
             <TextField
@@ -43,13 +49,20 @@ const Chat = ({ setReloadSettings }) => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={(e) => {
-                    if (e.key === 'Enter') sendMessage();
+                    if (e.key === 'Enter') {
+                        sendMessage(input);
+                        setInput('');
+                    }
                 }}
                 placeholder="設定内容を入力してください"
             />
-            <Button variant="contained" color="primary" onClick={sendMessage} style={{ marginTop: '10px' }}>
+            <Button variant="contained" color="primary" onClick={() => {
+                sendMessage(input);
+                setInput('');
+            }} style={{ marginTop: '10px' }}>
                 送信
             </Button>
+            <VoiceInput onVoiceInput={handleVoiceInput} />
             <List>
                 {messages.map((msg, index) => (
                     <ListItem key={index}>
