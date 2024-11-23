@@ -1,6 +1,6 @@
 // frontend/src/components/SettingsForm.js
 import React, { useState, useEffect } from 'react';
-import { TextField, Button, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, Select, MenuItem, InputLabel } from '@mui/material';
+import { TextField, Button, RadioGroup, FormControlLabel, Radio, FormLabel, FormControl, Select, MenuItem, InputLabel, Checkbox, FormGroup } from '@mui/material';
 import axios from 'axios';
 
 const SettingsForm = ({ reload }) => { // `reload`プロパティを受け取る
@@ -10,11 +10,22 @@ const SettingsForm = ({ reload }) => { // `reload`プロパティを受け取る
         gender: '',
         occupation: '',
         hobby: '',
+        allergies: [],
     });
 
     const [message, setMessage] = useState('');
 
     const occupations = ['エンジニア', 'デザイナー', 'マーケティング', '営業', 'その他'];
+    const allergyOptions = {
+        EGG: "卵",
+        MILK: "乳（牛乳）",
+        WHEAT: "小麦",
+        SHRIMP: "えび",
+        CRAB: "かに",
+        WALNUT: "くるみ",
+        PEANUT: "落花生（ピーナッツ）",
+        BUCKWHEAT: "そば"
+    };
 
     useEffect(() => {
         console.log('SettingsForm mounted or reload triggered');
@@ -28,6 +39,7 @@ const SettingsForm = ({ reload }) => { // `reload`プロパティを受け取る
                     gender: response.data.gender || '',
                     occupation: response.data.occupation || '',
                     hobby: response.data.hobby || '',
+                    allergies: response.data.allergies || [],
                 });
                 console.log('Fetched settings:', response.data); // デバッグ用ログ
             } catch (error) {
@@ -94,9 +106,9 @@ const SettingsForm = ({ reload }) => { // `reload`プロパティを受け取る
                 <FormControl component="fieldset" margin="normal" required>
                     <FormLabel component="legend">性別</FormLabel>
                     <RadioGroup row name="gender" value={formData.gender} onChange={handleChange}>
-                        <FormControlLabel value="男性" control={<Radio />} label="男性" />
-                        <FormControlLabel value="女性" control={<Radio />} label="女性" />
-                        <FormControlLabel value="その他" control={<Radio />} label="その他" />
+                        <FormControlLabel value="MALE" control={<Radio />} label="男性" />
+                        <FormControlLabel value="FEMALE" control={<Radio />} label="女性" />
+                        <FormControlLabel value="OTHER" control={<Radio />} label="その他" />
                     </RadioGroup>
                 </FormControl>
                 <FormControl fullWidth margin="normal">
@@ -122,6 +134,34 @@ const SettingsForm = ({ reload }) => { // `reload`プロパティを受け取る
                     fullWidth
                     margin="normal"
                 />
+                <FormControl component="fieldset" margin="normal">
+                    <FormLabel component="legend">アレルギー</FormLabel>
+                    <FormGroup row> {/* 横並びにするために `row` 属性を追加 */}
+                        {Object.entries(allergyOptions).map(([key, value]) => (
+                            <FormControlLabel
+                                key={key}
+                                control={
+                                    <Checkbox
+                                        checked={formData.allergies.includes(key)}
+                                        onChange={(e) => {
+                                            const { value, checked } = e.target;
+                                            setFormData((prevFormData) => {
+                                                const updatedAllergies = checked
+                                                    ? [...prevFormData.allergies, value]
+                                                    : prevFormData.allergies.filter((allergy) => allergy !== value);
+                                                return { ...prevFormData, allergies: updatedAllergies };
+                                            });
+                                        }}
+                                        value={key}
+                                    />
+                                }
+                                label={value}
+                            />
+                        ))}
+                    </FormGroup>
+                </FormControl>
+
+
                 <Button type="submit" variant="contained" color="primary" style={{ marginTop: '10px' }}>
                     送信
                 </Button>

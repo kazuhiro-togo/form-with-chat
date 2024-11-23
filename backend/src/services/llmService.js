@@ -13,7 +13,7 @@ exports.processMessage = async (message) => {
 
     // プロンプトを作成
     const prompt = `
-    あなたはシステム設定を支援するアシスタントです。以下のAPIスキーマに基づいて、ユーザーの要望に対応する設定JSONを生成してください。レスポンスは有効なJSONオブジェクトのみで、追加のテキストや説明を含めないでください。
+    あなたはシステム設定を支援するアシスタントです。以下のAPIスキーマに基づいて、ユーザーの要望に対応する設定JSONを生成してください。typeがarrayの場合、該当する値のみ返して下さい。
 
 現在の設定:
 ${JSON.stringify(currentSettings, null, 2)}

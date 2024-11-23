@@ -31,11 +31,12 @@ exports.getSettings = async () => {
                 // ファイルが存在しない場合は初期設定を返す
                 if (err.code === 'ENOENT') {
                     return resolve({
-                        name: "未設定",
+                        name: "",
                         age: 0,
-                        gender: "未設定",
+                        gender: "OTHER",
                         occupation: "",
-                        hobby: ""
+                        hobby: "",
+                        allergies: [],
                     });
                 }
                 return reject(err);
