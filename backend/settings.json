@@ -1,11 +1,11 @@
 {
-  "name": "山田太郎",
+  "name": "山田花子",
   "age": 40,
-  "gender": "MALE",
-  "occupation": "エンジニア",
-  "hobby": "釣り",
+  "gender": "FEMALE",
+  "occupation": "FIREFIGHTER",
+  "hobby": "読書",
   "allergies": [
-    "EGG",
-    "MILK"
+    "CRAB",
+    "SHRIMP"
   ]
 }
